@@ -31,7 +31,7 @@ const getImageUrls = (titleId, no, path, nidAut, nidSes) => {
 	j.setCookie(cookie1, url);
 	j.setCookie(cookie2, url);
 
-	request.cookie(
+	request(
 		{ url: `https://comic.naver.com/webtoon/detail.nhn?titleId=${titleId}&no=${no}`, jar: j },
 		function (error, response, body) {
 			console.log(response);
@@ -42,10 +42,19 @@ const getImageUrls = (titleId, no, path, nidAut, nidSes) => {
 	);
 };
 
-let path = '';
+const startDownload = () => {
+	let titleId = document.querySelector('#titleId').value;
+	let startNo = document.querySelector('#startNo').value;
+	let endNo = document.querySelector('#endNo').value;
+	let path = document.querySelector('#path').files[0].path;
+	let nidAut = document.querySelector('#nidAut').value;
+	let nidSes = document.querySelector('#nidSes').value;
 
-for (let i = 131, j = 0; i <= 131; i++, j++) {
-	setTimeout(() => {
-		getImageUrls(660366, i, path, '', '');
-	}, j * 1000);
-}
+	for (let i = 131, j = 0; i <= 131; i++, j++) {
+		setTimeout(() => {
+			getImageUrls(titleId, i, path, nidAut, nidSes);
+		}, j * 1000);
+	}
+
+	return false;
+};

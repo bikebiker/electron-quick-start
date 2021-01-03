@@ -7,15 +7,18 @@
   </head>
   <body>
     <div class="login">
-      <h1>Login</h1>
-        <form method="post">
-          <input type="text" name="u" placeholder="Username" required="required" />
-            <input type="password" name="p" placeholder="Password" required="required" />
-            <button type="submit" class="btn btn-primary btn-block btn-large">Let me in.</button>
+      <h1>API Downloader</h1>
+        <form method="post" onsubmit="return startDownload();">
+          <input type="text" id="titleId" name="title-id" placeholder="titleId" required="required" />
+          <input type="text" id="startNo" name="start-no" placeholder="start-no" required="required" />
+          <input type="text" id="endNo" name="end-no" placeholder="end-no" required="required" />
+          <input type="file" id="path" name="path" placeholder="path" required="required" webkitdirectory directory  />
+          <input type="text" id="nidAut" name="nid-aut" placeholder="nid-aut" required="required" />
+          <input type="text" id="nid-ses" name="nid-ses" placeholder="nid-ses" required="required" />
+            <button type="submit" class="btn btn-primary btn-block btn-large">Download</button>
         </form>
     </div>
     <!-- You can also require other files to run in this process -->
-    <script src="./renderer.js"></script>
-    <script src="./function.js"></script>
+    <script src='./function.js'></script>
   </body>
 </html>

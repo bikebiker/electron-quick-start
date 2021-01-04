@@ -3,24 +3,31 @@
   <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./style.css">
-    <title>API Downloader</title>
+    <title>API Downloader (개발)</title>
   </head>
   <body>
     <div class="login">
-      <h1>API Downloader</h1>
-        <form method="post" onsubmit="return startDownload();">
-          <input type="text" id="userId" name="userId" placeholder="신청자 ID" required="required" />
-          <input type="text" id="accessKey" name="accessKey" placeholder="다운로드 인증키 입력" required="required" />
+      <h1>API Downloader (DEV)</h1>
+        <form method="post" onsubmit="return false;">
+          <input type="text" id="uid" name="uid" placeholder="신청자 ID" required="required" />
+          <input type="text" id="akey" name="akey" placeholder="다운로드 인증키 입력" required="required" />
+          <button type="submit" class="btn btn-primary btn-block btn-large" onclick="javascript:startDownload();">Download</button>
+          
+          <span id="logArea"></span>
 
-          <input type="text" id="authUrl" name="authUrl" placeholder="인증요청 URL (서버URL입력)" required="required" />
-          <pre>request : post
+          <input type="text" id="url" name="authUrl" placeholder="인증요청 URL (서버URL입력)" required="required" value="http://cabin.iooo.pw:3000/file/find"/>
+          <pre>
+request 
+  post : http://cabin.iooo.pw:3000/file/find
+  body : {"uid":"1", "akey":"2"}
+
 response : 
 {
   "fileUrl":"http://path/to/fileName.dat",
-  "success":true
+  "success":true,
+  "msg":"안내 메시지"
 }
           </pre>
-          <button type="submit" class="btn btn-primary btn-block btn-large">Download</button>
           
         </form>
         <div style="height: 30px;"></div>
@@ -37,11 +44,8 @@ response :
       <h3>참고</h3>
       <ul>
         <li>다운로드 중 연결이 끊기거나 종료된경우 재시도 하면 이어받기가능</li>
-        <li>저장 폴더는 사용자의 다운로드 폴더(~/download)</li>
       </ul>
     </div>
-
-
     <script src='./function.js'></script>
   </body>
 </html>

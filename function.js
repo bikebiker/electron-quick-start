@@ -1,55 +1,110 @@
-let request = require('request');
-let cheerio = require('cheerio');
-let fs = require('fs');
+const elerem = require('electron').remote;
+const dialog = elerem.dialog;
+const app = elerem.app;
 
-const downloadImage = (path, url, titleId, no, retryCount) => {
-	request(
-		{
-			url: url,
-			headers: { referer: `https://comic.naver.com/webtoon/detail.nhn?titleId=${titleId}&no=${no}` },
-			encoding: null,
+const request = require('request');
+const EasyDl = require('easydl');
+const path = require('path');
+const log = require('./log.js');
+
+const findFile = (url, uid, akey) => {
+	const options = {
+		uri: url,
+		method: 'POST',
+		body: {
+			uid: uid,
+			akey: akey,
 		},
-		function (error, response, body) {
-			if (error && --retryCount >= 0) {
-				console.log(`재시도 ${titleId} ${no} ${retryCount}`);
-				downloadImage(path, url, titleId, no, retryCount);
-				return;
+		json: true,
+	};
+	try {
+		request.post(options, function (err, httpResponse, body) {
+			console.log(err);
+			console.log(httpResponse);
+			console.log(body);
+			log.updateLog('파일요청중...');
+			if (!err && httpResponse.statusCode == 200) {
+				//let jdata = JSON.parse(body);
+				//console.log(jdata);
+
+				if (body.success) {
+					// app.getPath("desktop")       // User's Desktop folder
+					// app.getPath("documents")     // User's "My Documents" folder
+					// app.getPath("downloads")     // User's Downloads folder
+					log.updateLog(`다운로드 준비.`);
+					try {
+						(async () => {
+							let toLocalPath = path.resolve(app.getPath('downloads'), path.basename(body.fileUrl));
+							let userChosenPath = dialog.showSaveDialogSync({ defaultPath: toLocalPath });
+							if (userChosenPath) {
+								log.updateLog(`다운로드 시작: ${body.fileUrl}`);
+								const dl = new EasyDl(body.fileUrl, toLocalPath, {
+									reportInterval: 1000,
+								});
+								await dl
+									.on('progress', ({ details, total }) => {
+										console.log(details);
+										log.updateLog(
+											`진행율: + ${Math.floor(total.percentage)}% (${Math.floor(
+												total.bytes / 1024 / 1024
+											)}MB)`
+										);
+									})
+									.wait();
+								updateHit('http://cabin.iooo.pw:3000/file/hit', uid, akey);
+							}
+						})();
+					} catch (e) {
+						console.log('[error', e);
+					}
+				} else {
+					log.updateLog(`메시지: ${body.msg}`);
+				}
+			} else {
+				log.updateLog(err);
 			}
-			fs.writeFile(path + '\\' + `${titleId}_${no}_${url.split('_IMAGE01_')[1]}`, body, null, (err) => {
-				if (err) throw err;
-				console.log('The file has been saved!');
-			});
-		}
-	);
+		});
+	} catch (error) {
+		console.log(error);
+	}
 };
 
-const getImageUrls = (titleId, no, path, nidAut, nidSes) => {
-	let j = request.jar();
-	let cookie1 = request.cookie(`NID_AUT=${nidAut}`);
-	let cookie2 = request.cookie(`NID_SES=${nidSes}`);
-	let url = 'https://comic.naver.com';
-	j.setCookie(cookie1, url);
-	j.setCookie(cookie2, url);
-
-	request(
-		{ url: `https://comic.naver.com/webtoon/detail.nhn?titleId=${titleId}&no=${no}`, jar: j },
-		function (error, response, body) {
-			console.log(response);
-			const $ = cheerio.load(body);
-			for (let i = 0; i < $('.wt_viewer img').length; i++)
-				downloadImage('download', $('.wt_viewer img')[i].attribs.src, titleId, no, 5);
-		}
-	);
+const updateHit = (url, uid, akey) => {
+	const options = {
+		uri: url,
+		method: 'POST',
+		body: {
+			uid: uid,
+			akey: akey,
+		},
+		json: true,
+	};
+	try {
+		request.post(options, function (err, httpResponse, body) {
+			console.log(err);
+			console.log(httpResponse);
+			console.log(body);
+			log.updateLog('파일요청중...');
+			if (!err && httpResponse.statusCode == 200) {
+				if (body.success) {
+					console.log('hit 업데이트');
+					log.updateLog(`다운로드 완료 (${body.hit}회)`);
+				} else {
+					log.updateLog(`다운로드 완료`);
+				}
+			} else {
+				log.updateLog(err);
+			}
+		});
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 const startDownload = () => {
-	let downloadKey = document.querySelector('#downloadKey').value;
+	let url = document.querySelector('#url').value;
+	let uid = document.querySelector('#uid').value;
+	let akey = document.querySelector('#akey').value;
 
-	for (let i = 131, j = 0; i <= 131; i++, j++) {
-		setTimeout(() => {
-			getImageUrls(titleId, i, path, nidAut, nidSes);
-		}, j * 1000);
-	}
-
-	return false;
+	findFile(url, uid, akey);
 };

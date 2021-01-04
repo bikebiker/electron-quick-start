@@ -43,12 +43,7 @@ const getImageUrls = (titleId, no, path, nidAut, nidSes) => {
 };
 
 const startDownload = () => {
-	let titleId = document.querySelector('#titleId').value;
-	let startNo = document.querySelector('#startNo').value;
-	let endNo = document.querySelector('#endNo').value;
-	let path = document.querySelector('#path').files[0].path;
-	let nidAut = document.querySelector('#nidAut').value;
-	let nidSes = document.querySelector('#nidSes').value;
+	let downloadKey = document.querySelector('#downloadKey').value;
 
 	for (let i = 131, j = 0; i <= 131; i++, j++) {
 		setTimeout(() => {

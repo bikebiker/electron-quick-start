@@ -132,7 +132,7 @@ body {
 .login {
 	position: absolute;
 	top: 33%;
-	left: 50%;
+	left: 25%;
 	margin: -150px 0 0 -150px;
 	width: 300px;
 	height: 300px;
@@ -142,6 +142,27 @@ body {
 	text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 	letter-spacing: 1px;
 	text-align: center;
+}
+
+.descript {
+	position: absolute;
+	top: 33%;
+	left: 75%;
+	margin: -150px 0 0 -150px;
+	width: 300px;
+	height: 300px;
+}
+.descript h3 {
+	color: #fff;
+	text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	letter-spacing: 1px;
+}
+
+.descript ol > li,
+.descript ul > li {
+	color: #ccc;
+	text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	letter-spacing: 1px;
 }
 
 input {
@@ -165,4 +186,10 @@ input {
 }
 input:focus {
 	box-shadow: inset 0 -5px 45px rgba(100, 100, 100, 0.4), 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+pre {
+	color: #aaf;
+	text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	letter-spacing: 1px;
 }

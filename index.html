@@ -3,17 +3,45 @@
   <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./style.css">
-    <title>Test Downloader</title>
+    <title>API Downloader</title>
   </head>
   <body>
     <div class="login">
       <h1>API Downloader</h1>
         <form method="post" onsubmit="return startDownload();">
-          <input type="text" id="downloadKey" name="downKey" placeholder="다운로드 key값 입력" required="required" />
+          <input type="text" id="userId" name="userId" placeholder="신청자 ID" required="required" />
+          <input type="text" id="accessKey" name="accessKey" placeholder="다운로드 인증키 입력" required="required" />
+
+          <input type="text" id="authUrl" name="authUrl" placeholder="인증요청 URL (서버URL입력)" required="required" />
+          <pre>request : post
+response : 
+{
+  "fileUrl":"http://path/to/fileName.dat",
+  "success":true
+}
+          </pre>
           <button type="submit" class="btn btn-primary btn-block btn-large">Download</button>
+          
         </form>
+        <div style="height: 30px;"></div>
     </div>
-    <!-- You can also require other files to run in this process -->
+    <div class="descript">
+      <h3>사용법</h3>
+      <ol>
+        <li>API Data를 신청</li>
+        <li>승인후 다운로드 인증키를 발급(500MB 이상)</li>
+        <li>신청아이디와 인증키를 좌측 폼에 입력</li>
+        <li>Download 버튼을 클릭한다.</li>
+        <li>입력값 유효성 체크 후 다운로드 시작.</li>
+      </ol>
+      <h3>참고</h3>
+      <ul>
+        <li>다운로드 중 연결이 끊기거나 종료된경우 재시도 하면 이어받기가능</li>
+        <li>저장 폴더는 사용자의 다운로드 폴더(~/download)</li>
+      </ul>
+    </div>
+
+
     <script src='./function.js'></script>
   </body>
 </html>

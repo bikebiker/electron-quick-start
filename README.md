@@ -8,7 +8,7 @@
 
 -   개발 베이스 : [Electron API Demos](https://electronjs.org/#get-started)
 -   참고 강좌 : [네이버 웹툰 다운로더](https://www.youtube.com/watch?v=t1vJtgG0kdo&list=PLqh5vK4CKWeZDGPhn5IMk3uZv2rQ5hNSK&index=1)
--   라이브러리 :
+-   라이브러리 : [EasyDl](https://www.npmjs.com/package/easydl)
 
 ## 사용법
 

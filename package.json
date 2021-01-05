@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "echo 'Error: no test specified' && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-packager . apidownloader"
   },
   "repository": "https://github.com/bikebiker/ara-api-file-downloader",
   "keywords": [
@@ -16,12 +17,41 @@
   "author": "bikebiker",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^11.1.1"
+    "electron": "^11.1.1",
+    "electron-builder": "^22.9.1",
+    "electron-packager": "^15.2.0"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.5",
     "easydl": "^1.0.1",
     "express": "^4.17.1",
     "request": "^2.88.2"
+  },
+  "build": {
+    "productName": "ApiDownloader",
+    "appId": "kr.co.aracomm.ApiDownloader",
+    "asar": true,
+    "protocols": {
+      "name": "ApiDownloader",
+      "schemes": [
+        "apidownloader"
+      ]
+    },
+    "win": {
+      "target": [
+        "zip",
+        "nsis"
+      ],
+      "icon": "./resources/installer/Icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "directories": {
+      "buildResources": "./resources/installer/",
+      "output": "./dist/",
+      "app": "."
+    }
   }
 }

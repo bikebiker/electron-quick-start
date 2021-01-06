@@ -3,31 +3,18 @@
   <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./style.css">
-    <title>API Downloader (개발)</title>
+    <title>대중교통 이동형 IoT 통합정보 다운로더</title>
   </head>
   <body>
     <div class="login">
-      <h1>API Downloader (DEV)</h1>
+      <h1>대중교통 이동형 IoT 통합정보 다운로더</h1>
         <form method="post" onsubmit="return false;">
-          <input type="text" id="uid" name="uid" placeholder="신청자 ID" required="required" />
-          <input type="text" id="akey" name="akey" placeholder="다운로드 인증키 입력" required="required" />
+          <input type="text" id="uid" name="uid" placeholder="신청자 ID" required="required" value="admin"/>
+          <input type="text" id="akey" name="akey" placeholder="다운로드 인증키 입력" required="required" value="APP_000072"/>
           <button type="submit" class="btn btn-primary btn-block btn-large" onclick="javascript:startDownload();">Download</button>
           
           <span id="logArea"></span>
-
-          <input type="text" id="url" name="authUrl" placeholder="인증요청 URL (서버URL입력)" required="required" value="http://cabin.iooo.pw:3000/file/find"/>
-          <pre>
-request 
-  post : http://cabin.iooo.pw:3000/file/find
-  body : {"uid":"1", "akey":"2"}
-
-response : 
-{
-  "fileUrl":"http://path/to/fileName.dat",
-  "success":true,
-  "msg":"안내 메시지"
-}
-          </pre>
+          <input type="hidden" id="url" name="authUrl" placeholder="인증요청 URL (서버URL입력)" required="required" value="http://118.67.132.219:8080/gness/download/findDownLoadFile"/>
           
         </form>
         <div style="height: 30px;"></div>
@@ -35,16 +22,12 @@ response :
     <div class="descript">
       <h3>사용법</h3>
       <ol>
-        <li>API Data를 신청</li>
-        <li>승인후 다운로드 인증키를 발급(500MB 이상)</li>
-        <li>신청아이디와 인증키를 좌측 폼에 입력</li>
-        <li>Download 버튼을 클릭한다.</li>
-        <li>입력값 유효성 체크 후 다운로드 시작.</li>
+        <li>대중교통 이동형 IoT 통합정보 사이트에서 데이터 다운로드 신청 메뉴 접속</li>
+        <li>해당 신청건의 상세보기 버튼 클릭하여 상세조회화면 접속</li>
+        <li>상세조화화면 하단의 승인 정보의 인증키 정보 확인</li>
+        <li>다운로더 프로그램에 대중교통 이동형 IoT 통합정보 사이트 로그인 ID와 승인정보 인증키 입력</li>
+        <li>Download 버튼 클릭하여 다운로드 실행</li>
       </ol>
-      <h3>참고</h3>
-      <ul>
-        <li>다운로드 중 연결이 끊기거나 종료된경우 재시도 하면 이어받기가능</li>
-      </ul>
     </div>
     <script src='./function.js'></script>
   </body>

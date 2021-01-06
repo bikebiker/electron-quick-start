@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo 'Error: no test specified' && exit 1",
     "start": "electron .",
-    "build": "electron-packager . apidownloader"
+	"build": "electron-packager . apidownloader",
+	"deploy": "electron-builder --windows nsis:ia32"
   },
   "repository": "https://github.com/bikebiker/ara-api-file-downloader",
   "keywords": [

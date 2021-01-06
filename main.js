@@ -2,6 +2,25 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
+// const mainWindow = null;
+// const gotTheLock = app.requestSingleInstanceLock();
+// if (!gotTheLock) {
+//   app.quit();
+// } else {
+//   app.on("second-instance", (event, commandLine, workingDirectory) => {
+//     // Someone tried to run a second instance, we should focus our window.
+//     if (mainWindow) {
+//       if (mainWindow.isMinimized()) mainWindow.restore();
+//       mainWindow.focus();
+//     }
+//   });
+
+//   // Create myWindow, load the rest of the app, etc...
+//   app.on("ready", () => {
+//     createWindow();
+//   });
+// }
+
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({

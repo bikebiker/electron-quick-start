@@ -109,6 +109,11 @@
   display: block;
 }
 
+.btn-inline {
+  width: 45%;
+  display: inline-block;
+}
+
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -256,4 +261,40 @@ pre {
   color: #fff;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   letter-spacing: 1px;
+}
+
+#progressWrap {
+  color: #fff;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+  margin-top: 20px;
+}
+
+#progress-background {
+  display: inline-flex;
+  margin: 1rem auto;
+  border: 1px solid #333;
+  width: 80%;
+  height: 10px;
+  background-color: steelblue;
+}
+
+#progressbar {
+  height: 100%;
+  background-color: springgreen;
+}
+
+#downPercent {
+  display: inline-block;
+  width: 17%;
+}
+
+.hide {
+  display: none;
+}
+.btn-group,
+.btn-group,
+.btn-group,
+.btn-group {
+  text-align: center;
 }

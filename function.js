@@ -1,3 +1,4 @@
+const { shell } = require("electron");
 const elerem = require("electron").remote;
 const dialog = elerem.dialog;
 const app = elerem.app;
@@ -6,6 +7,13 @@ const request = require("request");
 const EasyDl = require("easydl");
 const path = require("path");
 const log = require("./log.js");
+
+const clean = require("easydl/utils");
+//import { clean } from "./node_modules/easydl/dist//utils";
+
+let dlObj = null;
+let fileUrl = null;
+let userChosenPath = null;
 
 const findFile = (url, uid, akey) => {
   const options = {
@@ -22,56 +30,74 @@ const findFile = (url, uid, akey) => {
       console.log(err);
       console.log(httpResponse);
       console.log(body);
-      log.updateLog("파일요청중...");
       if (!err && httpResponse.statusCode == 200) {
-        //let jdata = JSON.parse(body);
-        //console.log(jdata);
-
         if (body.success) {
-          // app.getPath("desktop")       // User's Desktop folder
-          // app.getPath("documents")     // User's "My Documents" folder
-          // app.getPath("downloads")     // User's Downloads folder
-          log.updateLog(`다운로드 준비.`);
-          try {
-            (async () => {
-              let toLocalPath = path.resolve(
-                app.getPath("downloads"),
-                path.basename(body.fileUrl)
-              );
-              let userChosenPath = dialog.showSaveDialogSync({
-                defaultPath: toLocalPath,
-              });
-              if (userChosenPath) {
-                log.updateLog(`다운로드 시작: ${body.fileUrl}`);
-                const dl = new EasyDl(body.fileUrl, toLocalPath, {
-                  reportInterval: 1000,
-                  existBehavior: "overwrite",
-                });
-                await dl
-                  .on("progress", ({ details, total }) => {
-                    console.log(details);
-                    log.updateLog(
-                      `진행율: + ${Math.floor(total.percentage)}% (${Math.floor(
-                        total.bytes / 1024 / 1024
-                      )}MB)`
-                    );
-                  })
-                  .wait();
-                updateHit("http://cabin.iooo.pw:3000/file/hit", uid, akey);
-              }
-            })();
-          } catch (e) {
-            console.log("[error", e);
+          let toLocalPath = path.resolve(app.getPath("downloads"), path.basename(body.fileNm));
+          fileUrl = body.fileUrl;
+          userChosenPath = dialog.showSaveDialogSync({
+            defaultPath: toLocalPath,
+          });
+
+          if (userChosenPath) {
+            log.update("fileName", path.basename(userChosenPath));
+            progressDownload(fileUrl, userChosenPath);
+          } else {
+            log.update("etcMsg", `다운로드 취소`);
           }
         } else {
-          log.updateLog(`메시지: ${body.msg}`);
+          log.update("etcMsg", `메시지: ${body.msg}`);
         }
       } else {
-        log.updateLog(err);
+        console.log(err);
+        log.update("etcMsg", `메시지: ${err}`);
       }
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+const progressDownload = (fileUrl, userChosenPath) => {
+  Array.from(document.querySelectorAll(".btn-group")).forEach((element) => {
+    element.classList.add("hide");
+  });
+
+  try {
+    (async () => {
+      console.log(`다운로드 시작: ${fileUrl}`);
+      const dl = new EasyDl(fileUrl, userChosenPath, {
+        reportInterval: 1000,
+        existBehavior: "overwrite",
+      });
+      dlObj = dl;
+      document.getElementById("stat-2").classList.remove("hide");
+
+      dl.on("metadata", (metadata) => {
+        console.log("[metadata]", metadata);
+        log.update("fileSize", (metadata.size / 1024 / 1024).toFixed(2));
+      }).on("progress", ({ details, total }) => {
+        console.log("[details]", details);
+        console.log("[total]", total);
+        let progressBarObj = document.getElementById("progressbar");
+        progressBarObj.style.width = total.percentage.toFixed() + "%";
+        log.update("downPercent", `${total.percentage.toFixed(1)}%`);
+        log.update("downSize", `${(total.bytes / 1024 / 1024).toFixed(2)} MB`);
+      });
+
+      const completed = await dl.wait();
+      Array.from(document.querySelectorAll(".btn-group")).forEach((element) => {
+        element.classList.add("hide");
+      });
+      if (completed) {
+        log.update("etcMsg", `저장 완료.`);
+        document.getElementById("stat-4").classList.remove("hide");
+      } else {
+        log.update("etcMsg", `다운로드 중지.`);
+        document.getElementById("stat-3").classList.remove("hide");
+      }
+    })();
+  } catch (e) {
+    console.log("[error", e);
   }
 };
 
@@ -90,16 +116,16 @@ const updateHit = (url, uid, akey) => {
       console.log(err);
       console.log(httpResponse);
       console.log(body);
-      log.updateLog("파일요청중...");
+
       if (!err && httpResponse.statusCode == 200) {
         if (body.success) {
           console.log("hit 업데이트");
-          log.updateLog(`다운로드 완료 (${body.hit}회)`);
+          log.update("etcMsg", `${body.hit}회 다운로드`);
         } else {
-          log.updateLog(`다운로드 완료`);
+          log.update("etcMsg", `다운로드 완료`);
         }
       } else {
-        log.updateLog(err);
+        log.update("etcMsg", err);
       }
     });
   } catch (error) {
@@ -115,4 +141,28 @@ const startDownload = () => {
   if (url && uid && akey) {
     findFile(url, uid, akey);
   }
+};
+const pauseDownload = () => {
+  dlObj.destroy();
+  Array.from(document.querySelectorAll(".btn-group")).forEach((element) => {
+    element.classList.add("hide");
+  });
+  document.getElementById("stat-3").classList.remove("hide");
+  log.update("etcMsg", `다운로드 중지`);
+};
+const resumeDownload = () => {
+  progressDownload(fileUrl, userChosenPath);
+};
+const cancelDownload = () => {
+  if (dlObj) dlObj.destroy();
+  (async () => {
+    const deletedChunks = await clean(userChosenPath);
+    console.log(deletedChunks);
+  })();
+};
+const openFolder = () => {
+  shell.showItemInFolder(userChosenPath);
+};
+const initWindow = () => {
+  location.reload();
 };

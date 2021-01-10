@@ -6,9 +6,16 @@
   "scripts": {
     "test": "echo 'Error: no test specified' && exit 1",
     "start": "electron .",
-	"build": "electron-packager . apidownloader",
-	"deploy": "electron-builder --windows nsis:ia32"
-  },
+		"build": "electron-packager . apidownloader",
+		"deploy": "electron-builder --win nsis:ia32",
+    "build:osx": "electron-builder --mac",
+    "build:linux": "npm run build:linux32 && npm run build:linux64",
+    "build:linux32": "build --linux --ia32",
+    "build:linux64": "build --linux --x64",
+    "build:win": "npm run build:win32 && npm run build:win64",
+    "build:win32": "build --win --ia32",
+    "build:win64": "build --win --x64"
+	},
   "repository": "https://github.com/bikebiker/ara-api-file-downloader",
   "keywords": [
     "Aracommunication",
@@ -36,13 +43,33 @@
       "schemes": [
         "apidownloader"
       ]
-    },
+		},
+		"mac": {
+			"target": [
+				"default"
+			],
+			"icon": "./resources/installer/Icon.icns"
+		}, 
+		"dmg": {
+			"title": "ApiDownloader",
+			"icon": "./resources/installer/Icon.icns"
+		},
     "win": {
       "target": [
         "zip",
         "nsis"
       ],
       "icon": "./resources/installer/Icon.ico"
+		},
+    "linux": { 
+      "target": [
+        "AppImage", 
+        "deb",
+        "rpm",
+        "zip",
+        "tar.gz"
+      ],
+      "icon": "./resources/linuxicon"
     },
     "nsis": {
       "oneClick": false,

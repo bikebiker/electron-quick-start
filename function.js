@@ -7,8 +7,8 @@ const request = require("request");
 const EasyDl = require("easydl");
 const path = require("path");
 const log = require("./log.js");
-
-const clean = require("easydl/utils");
+const fs = require("fs");
+//const clean = require("easydl/utils");
 //import { clean } from "./node_modules/easydl/dist//utils";
 
 let dlObj = null;
@@ -45,11 +45,11 @@ const findFile = (url, uid, akey) => {
             log.update("etcMsg", `다운로드 취소`);
           }
         } else {
-          log.update("etcMsg", `메시지: ${body.msg}`);
+          log.update("fileName", `메시지: ${body.msg}`);
         }
       } else {
         console.log(err);
-        log.update("etcMsg", `메시지: ${err}`);
+        log.update("fileName", `메시지: ${body.msg}`);
       }
     });
   } catch (error) {
@@ -123,6 +123,7 @@ const updateHit = (url, uid, akey) => {
           log.update("etcMsg", `${body.hit}회 다운로드`);
         } else {
           log.update("etcMsg", `다운로드 완료`);
+          deleteParts();
         }
       } else {
         log.update("etcMsg", err);
@@ -150,19 +151,40 @@ const pauseDownload = () => {
   document.getElementById("stat-3").classList.remove("hide");
   log.update("etcMsg", `다운로드 중지`);
 };
+
 const resumeDownload = () => {
   progressDownload(fileUrl, userChosenPath);
+  log.update("etcMsg", `다운로드 시작`);
 };
+
 const cancelDownload = () => {
   if (dlObj) dlObj.destroy();
-  (async () => {
-    const deletedChunks = await clean(userChosenPath);
-    console.log(deletedChunks);
-  })();
+  deleteParts();
+  initWindow();
 };
+
 const openFolder = () => {
   shell.showItemInFolder(userChosenPath);
 };
+
 const initWindow = () => {
   location.reload();
+};
+
+const deleteParts = () => {
+  const parsed = path.parse(userChosenPath);
+  const targetFile = parsed.base;
+  const targetFolder = parsed.dir;
+  fs.readdir(targetFolder, (err, files) => {
+    if (err) throw err;
+    const regex = /(.+)\.\$\$[0-9]+(\$PART)?$/;
+    for (const file of files) {
+      const cap = regex.exec(file);
+      if (!cap || (targetFile !== null && cap[1] !== targetFile)) continue;
+
+      fs.unlink(path.join(targetFolder, file), (err) => {
+        if (err) throw err;
+      });
+    }
+  });
 };

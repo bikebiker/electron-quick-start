@@ -11,8 +11,10 @@
 	<div class="login">
 		<h1>대중교통 이동형 IoT 통합정보 다운로더</h1>
 		<form method="post" onsubmit="return false;">
-			<input type="text" id="uid" name="uid" placeholder="신청자 ID" required="required" value="admin" />
-			<input type="text" id="akey" name="akey" placeholder="다운로드 인증키 입력" required="required" value="APP_000072" />
+			<!-- <input type="text" id="uid" name="uid" placeholder="신청자 ID" required="required" value="admin" /> -->
+			<input type="text" id="uid" name="uid" placeholder="신청자 ID" required="required" value="" />
+			<!-- <input type="text" id="akey" name="akey" placeholder="다운로드 인증키 입력" required="required" value="APP_000072" /> -->
+			<input type="text" id="akey" name="akey" placeholder="다운로드 인증키 입력" required="required" value="" />
 			<div class="btn-group" id="stat-1">
 				<button id="btn-down" type="submit" class="btn btn-primary btn-block btn-large"
 					onclick="javascript:startDownload();">
@@ -67,9 +69,10 @@
 				<div id="etcMsg"></div>
 			</div>
 
-			<!-- <input type="hidden" id="url" name="authUrl" placeholder="인증요청 URL (서버URL입력)" required="required" value="http://118.67.132.219:8080/gness/download/findDownLoadFile"/> -->
 			<input type="hidden" id="url" name="authUrl" placeholder="인증요청 URL (서버URL입력)" required="required"
-				value="http://localhost/gness/download/findDownLoadFile" />
+				value="http://118.67.132.219:8080/gness/download/findDownLoadFile" />
+			<!-- <input type="hidden" id="url" name="authUrl" placeholder="인증요청 URL (서버URL입력)" required="required"
+				value="http://localhost/gness/download/findDownLoadFile" /> -->
 		</form>
 		<div style="height: 30px"></div>
 	</div>

@@ -19,8 +19,7 @@
   "repository": "https://github.com/bikebiker/ara-api-file-downloader",
   "keywords": [
     "Aracommunication",
-    "downloader",
-    "custom"
+    "downloader"
   ],
   "author": "bikebiker",
   "license": "CC0-1.0",
@@ -35,7 +34,7 @@
     "request": "^2.88.2"
   },
   "build": {
-    "productName": "ApiDownloader",
+    "productName": "대중교통이동형통합정보다운로더",
     "appId": "kr.co.aracomm.ApiDownloader",
     "asar": true,
     "protocols": {
@@ -51,7 +50,7 @@
 			"icon": "./resources/installer/Icon.icns"
 		}, 
 		"dmg": {
-			"title": "ApiDownloader",
+			"title": "대중교통이동형통합정보다운로더",
 			"icon": "./resources/installer/Icon.icns"
 		},
     "win": {
